@@ -32,7 +32,7 @@ DOCS_FORMAT="html,index.html"
 GEN_TYPESCRIPT=false
 LINT=false
 LINT_CHECKS=""
-SUPPORTED_LANGUAGES=("go" "ruby" "csharp" "java" "python" "objc" "gogo" "php" "node" "web" "cpp" "descriptor_set")
+SUPPORTED_LANGUAGES=("go" "ruby" "csharp" "python" "objc" "gogo" "php" "node" "web" "cpp" "descriptor_set")
 EXTRA_INCLUDES=""
 OUT_DIR=""
 GO_SOURCE_RELATIVE=""
@@ -171,11 +171,7 @@ fi
 if [[ ! -d $OUT_DIR ]]; then
   # If a .jar is specified, protoc can output to the jar directly. So
   # don't create it as a directory.
-  if [[ "$GEN_LANG" == "java" ]] && [[ $OUT_DIR == *.jar ]]; then
-    mkdir -p `dirname $OUT_DIR`
-  else
-    mkdir -p $OUT_DIR
-  fi
+  mkdir -p $OUT_DIR
 fi
 
 GEN_STRING=''
@@ -193,9 +189,6 @@ Mgoogle/protobuf/wrappers.proto=github.com/gogo/protobuf/types,\
 Mgoogle/protobuf/field_mask.proto=github.com/gogo/protobuf/types,\
 plugins=grpc+embedded\
 :$OUT_DIR"
-        ;;
-    "java")
-        GEN_STRING="--grpc_out=$OUT_DIR --${GEN_LANG}_out=$OUT_DIR --plugin=protoc-gen-grpc=`which protoc-gen-grpc-java`"
         ;;
     "node")
         GEN_STRING="--grpc_out=$OUT_DIR --js_out=import_style=commonjs,binary:$OUT_DIR --plugin=protoc-gen-grpc=`which grpc_${PLUGIN_LANG}_plugin`"

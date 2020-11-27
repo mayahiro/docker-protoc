@@ -1,13 +1,11 @@
 ARG alpine=3.8
 ARG go=1.11.0
 ARG grpc
-ARG grpc_java
 
 FROM golang:$go-alpine$alpine AS build
 
 # TIL docker arg variables need to be redefined in each build stage
 ARG grpc
-ARG grpc_java
 
 RUN set -ex && apk --update --no-cache add \
     bash \
@@ -20,7 +18,6 @@ RUN set -ex && apk --update --no-cache add \
     libtool \
     g++ \
     git \
-    openjdk8-jre \
     libstdc++ \
     ca-certificates \
     nss
@@ -28,7 +25,7 @@ RUN set -ex && apk --update --no-cache add \
 WORKDIR /tmp
 COPY all/install-protobuf.sh /tmp
 RUN chmod +x /tmp/install-protobuf.sh
-RUN /tmp/install-protobuf.sh ${grpc} ${grpc_java}
+RUN /tmp/install-protobuf.sh ${grpc}
 RUN git clone https://github.com/googleapis/googleapis
 
 RUN curl -sSL https://github.com/uber/prototool/releases/download/v1.3.0/prototool-$(uname -s)-$(uname -m) \
@@ -77,7 +74,6 @@ RUN npm i -g ts-protoc-gen@0.10.0
 COPY --from=build /tmp/grpc/bins/opt/grpc_* /usr/local/bin/
 COPY --from=build /tmp/grpc/bins/opt/protobuf/protoc /usr/local/bin/
 COPY --from=build /tmp/grpc/libs/opt/ /usr/local/lib/
-COPY --from=build /tmp/grpc-java/compiler/build/exe/java_plugin/protoc-gen-grpc-java /usr/local/bin/
 COPY --from=build /tmp/googleapis/google/ /opt/include/google
 COPY --from=build /usr/local/include/google/ /opt/include/google
 COPY --from=build /usr/local/bin/prototool /usr/local/bin/prototool

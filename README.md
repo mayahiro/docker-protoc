@@ -17,7 +17,7 @@ language you want to generate.
     * [gRPC Gateway](https://github.com/grpc-ecosystem/grpc-gateway) using a custom go-based server with `namely/gen-grpc-gateway`
 * [Google APIs](https://github.com/googleapis/googleapis) included in `/usr/local/include/google`
 * [Protobuf library artificats](https://github.com/google/protobuf/tree/master/src/google/protobuf) included in `/usr/local/include/google/protobuf`
-* Support for all C based gRPC libraries with Go and Java native libraries
+* Support for all C based gRPC libraries with Go native libraries
 
 If you're having trouble, see [Docker troubleshooting](#docker-troubleshooting) below.
 

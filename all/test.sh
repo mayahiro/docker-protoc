@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-LANGS=("go" "ruby" "csharp" "java" "python" "objc" "node" "gogo" "php" "cpp" "descriptor_set")
+LANGS=("go" "ruby" "csharp" "python" "objc" "node" "gogo" "php" "cpp" "descriptor_set")
 
 CONTAINER=${CONTAINER}
 
@@ -70,11 +70,3 @@ for lang in ${LANGS[@]}; do
     test_dir="gen/foo/bar"
     testGeneration "$lang" "$test_dir" -o "$test_dir"
 done
-
-
-# Test .jar generation for java
-docker run --rm -v=`pwd`:/defs $CONTAINER -f all/test/test.proto -l java -i all/test/ -o gen/test.jar
-if [[ ! -f gen/test.jar ]]; then
-  echo "Expected gen/test.jar to be a jar file."
-  exit 1
-fi
