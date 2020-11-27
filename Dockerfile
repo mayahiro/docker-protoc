@@ -35,11 +35,17 @@ RUN curl -sSL https://github.com/uber/prototool/releases/download/v1.3.0/prototo
     -o /usr/local/bin/prototool && \
     chmod +x /usr/local/bin/prototool
 
+FROM golang:1.15-alpine AS latest-go-build
+
+RUN set -ex && apk --update --no-cache add \
+    curl \
+    git 
+
 # Go get go-related bins
 RUN go get -u google.golang.org/grpc
 
 RUN go get -u github.com/grpc-ecosystem/grpc-gateway/protoc-gen-grpc-gateway
-RUN go get -u github.com/grpc-ecosystem/grpc-gateway/protoc-gen-swagger
+RUN go get -u github.com/grpc-ecosystem/grpc-gateway/protoc-gen-openapiv2
 RUN go get -u github.com/golang/protobuf/protoc-gen-go
 
 RUN go get -u github.com/gogo/protobuf/protoc-gen-gogo
@@ -75,10 +81,10 @@ COPY --from=build /tmp/grpc-java/compiler/build/exe/java_plugin/protoc-gen-grpc-
 COPY --from=build /tmp/googleapis/google/ /opt/include/google
 COPY --from=build /usr/local/include/google/ /opt/include/google
 COPY --from=build /usr/local/bin/prototool /usr/local/bin/prototool
-COPY --from=build /go/bin/* /usr/local/bin/
-COPY --from=build /tmp/grpc_web_plugin /usr/local/bin/grpc_web_plugin
+COPY --from=latest-go-build /go/bin/* /usr/local/bin/
+COPY --from=latest-go-build /tmp/grpc_web_plugin /usr/local/bin/grpc_web_plugin
 
-COPY --from=build /go/src/github.com/grpc-ecosystem/grpc-gateway/protoc-gen-swagger/options/ /opt/include/protoc-gen-swagger/options/
+COPY --from=latest-go-build /go/src/github.com/grpc-ecosystem/grpc-gateway/protoc-gen-openapiv2/options/ /opt/include/protoc-gen-openapiv2/options/
 
 ADD all/entrypoint.sh /usr/local/bin
 RUN chmod +x /usr/local/bin/entrypoint.sh
