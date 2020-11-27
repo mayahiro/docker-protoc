@@ -17,9 +17,8 @@ git clone -b v$1.x --recursive -j8 https://github.com/grpc/grpc
 cd /tmp/grpc
 make
 make install
-# php support
+
 git submodule update --init
-make grpc_php_plugin
 
 cp /tmp/grpc/bins/opt/protobuf/protoc /usr/local/bin/
 
