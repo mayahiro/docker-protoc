@@ -9,6 +9,10 @@ jobs:
     env:
       IMAGE_NAME: protoc-all
     steps:
+      - name: Extract Branch/Tag Names
+        run: |
+          echo "::set-env name=TAG::${GITHUB_REF#refs/tags/}"
+        
       - name: Check out the repo
         uses: actions/checkout@v2
 
@@ -33,4 +37,4 @@ jobs:
             go_version=1.15
           target: ${{ env.IMAGE_NAME }}
           tags: |
-            ghcr.io/${{ github.repository_owner }}/${{ env.IMAGE_NAME }}:${{ GITHUB_REF#refs/tags/ }}
+            ghcr.io/${{ github.repository_owner }}/${{ env.IMAGE_NAME }}:${{ env.TAG }}
