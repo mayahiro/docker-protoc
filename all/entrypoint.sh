@@ -32,7 +32,7 @@ DOCS_FORMAT="html,index.html"
 GEN_TYPESCRIPT=false
 LINT=false
 LINT_CHECKS=""
-SUPPORTED_LANGUAGES=("go" "ruby" "csharp" "python" "objc" "gogo" "php" "node" "web" "cpp" "descriptor_set")
+SUPPORTED_LANGUAGES=("go" "ruby" "csharp" "python" "objc" "gogo" "node" "web" "cpp" "descriptor_set")
 EXTRA_INCLUDES=""
 OUT_DIR=""
 GO_SOURCE_RELATIVE=""
@@ -194,7 +194,7 @@ plugins=grpc+embedded\
         GEN_STRING="--grpc_out=$OUT_DIR --js_out=import_style=commonjs,binary:$OUT_DIR --plugin=protoc-gen-grpc=`which grpc_${PLUGIN_LANG}_plugin`"
         ;;
     "web")
-        GEN_STRING="--grpc-web_out=import_style=typescript,mode=grpcwebtext:$OUT_DIR --js_out=import_style=commonjs:$OUT_DIR --plugin=protoc-gen-grpc-web=`which grpc_${PLUGIN_LANG}_plugin`"
+        GEN_STRING="--grpc-web_out=import_style=typescript,mode=grpcweb:$OUT_DIR --js_out=import_style=commonjs,binary:$OUT_DIR --plugin=protoc-gen-grpc-web=`which grpc_${PLUGIN_LANG}_plugin`"
         ;;
     "descriptor_set")
         GEN_STRING="--descriptor_set_out=$OUT_DIR/descriptor_set.pb"
@@ -275,5 +275,5 @@ if [ $GEN_GATEWAY = true ]; then
     protoc $PROTO_INCLUDE \
 		--grpc-gateway_out=logtostderr=true:$GATEWAY_DIR ${PROTO_FILES[@]}
     protoc $PROTO_INCLUDE  \
-		--swagger_out=logtostderr=true:$GATEWAY_DIR ${PROTO_FILES[@]}
+		--openapiv2_out=logtostderr=true,json_names_for_fields=false:$GATEWAY_DIR ${PROTO_FILES[@]}
 fi
